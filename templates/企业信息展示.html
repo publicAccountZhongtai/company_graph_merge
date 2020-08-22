@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>企业图谱展示</title>
+
+    <link rel="stylesheet" href="../static/css/layui.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-table.css">
+
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap-table.js"></script>
+    <script src="../static/js/bootstrap-table-zh-CN.js"></script>
+    <style type="text/css">
+   .layui-nav-tree .layui-nav-item{
+    font-weight:bold;
+        font-size:50px;
+        line-height:50px;
+    }
+	.search_box
+	{
+	position:absolute;
+	left:1200px;
+	top:120px
+	}
+
+    .show_box
+	{
+	position:relative;
+	left:1px;
+	top:1px
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">中泰证券</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <h3 style="color:#ffffff; text-align:center">企业图谱展示</h3>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="../static/images/featured_post_01.jpg" class="layui-nav-img">
+                    贤心
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree " lay-filter="test" lay-shrink="all">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">新闻实时展示</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/index">全部企业新闻</a></dd>
+                        <dd><a href="/single_company/华信">上海华信</a></dd>
+                        <dd><a href="/single_company/金茂">山东金茂</a></dd>
+                        <dd>
+                            <div class="layui-input-inline">
+
+                                <input style="width:100px;padding:0px 0px 0px 15px; margin:0px 0px 0px 15px;"
+                                       type="text"
+                                       name="title" required lay-verify="required" placeholder="更多"
+                                       autocomplete="off" class="layui-input" id="inputcompany">
+                            </div>
+                            <button type="button" class="layui-btn"
+                                    onclick="location='/single_company/'+document.getElementById(&quot;inputcompany&quot;).value;">
+                                查询
+                            </button>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">图谱操作</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/企业信息展示">企业展示</a></dd>
+                        <dd><a href="/企业关联信息展示">关联信息展示</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item"><a href="/add">增删改查</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <!-- Search Box -->
+        <form action="#" method="get">
+
+            <div class="search_box">
+
+                <p>Search:
+                    <input type="text" id="txt" name="search" placeholder="Search...">
+                    <input type="button" id="btn" onclick="tosearch()" value="查询">
+                </p>
+
+            </div>
+
+        </form>
+
+        <div class="show_box" id="graph" name="graph" style="width:800px;height:850px"></div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © BUPT
+    </div>
+</div>
+<script type="text/javascript" src="../static/layui.js"></script>
+<script type="text/javascript">
+  //定义 查询功能按钮
+  function tosearch(){
+    $.ajaxSetup({ async: false });
+    var myChart = echarts.init(document.getElementById('graph'));
+    var inputValue = $("#txt").val();
+    var filepath = '../static/data/jsondata/' + inputValue + '.json';
+    var rela = { "data": [], "links": [] };
+    var companys = {{companys|tojson}};
+
+
+    if(companys.indexOf(inputValue) != -1) {
+        $.get(filepath, function (json) {
+          rela = json;
+        });
+        option = {
+                title: {
+                    text: inputValue,
+                    left : '1%',
+                    top : '1%',
+                    textStyle : {
+                        color : '#000',
+                        fontSize : '20',
+                    }
+                },
+                tooltip: {},
+                animationDuration: 200,
+                animationEasingUpdate: 'quinticInOut',
+                series: [
+                    {
+                        type: 'graph',
+                        symbolSize: 50,
+                        roam: true,
+                        top: '10%',
+                        focusNodeAdjacency: true,
+                        draggable: true,
+                        layout: 'force',
+                        force: {
+                            repulsion: 500,
+                            gravity: 0.1,
+                            edgeLength: [30, 10],
+                            layoutAnimation: true,
+                        },
+                        edgeSymbol: ['circle', 'arrow'],
+                        edgeSymbolSize: [2, 8],
+                        lineStyle: {
+                            normal: {
+                                opacity: 0.9,
+                                width: 1.5,
+                                curveness: 0.2,
+                                color:'#ff4500'
+                             }
+                        },
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'inside',
+                                formatter: function (x) {
+                                    return (x.data.name.length > 4 ? (x.data.name.slice(0,3)+"...") : x.data.name);
+                                    },
+                                fontSize: 11,
+                                fontStyle: 'normal',
+                            }
+                        },
+                        edgeLabel: {
+                                normal: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: 9
+                                    },
+                                    formatter: function (y) {
+                                        return y.data.name;
+                                    }
+                                }
+                        },
+                        itemStyle: {
+                                normal: {
+                                    color:'#ffa500',
+                                    borderColor:'#e0ffff',
+                                }
+                        },
+                        data: rela.data,
+                        links: rela.links,
+                }]
+            };
+            myChart.setOption(option);
+      }
+      else {
+        alert("输入有误！");
+      }
+   }
+
+</script>
+<script>
+//一般直接写在一个js文件中
+layui.use(['layer', 'form','element','laydate'], function(){
+  var layer = layui.layer
+  ,form = layui.form
+  ,element = layui.element;
+  form.render('select','myDiv');
+  var laydate = layui.laydate;
+var nowTime = new Date().valueOf();
+var max = null;
+
+var start = laydate.render({
+elem: '#start_time',
+type: 'datetime',
+max: nowTime,
+btns: ['clear', 'confirm'],
+done: function(value, date){
+endMax = end.config.max;
+end.config.min = date;
+end.config.min.month = date.month -1;
+}
+});
+var end = laydate.render({
+elem: '#end_time',
+type: 'datetime',
+max: nowTime,
+done: function(value, date){
+if($.trim(value) == ''){
+var curDate = new Date();
+date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
+}
+start.config.max = date;
+start.config.max.month = date.month -1;
+}
+});
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+
+</html>
