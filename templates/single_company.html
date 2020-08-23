@@ -38,6 +38,8 @@
 
 
 
+
+
     </style>
 </head>
 <body class="layui-layout-body">
@@ -140,28 +142,28 @@
 
             <div class="layui-inline">
 
-                <select name="city" lay-verify="required">
+                <select name="city" lay-verify="required" id="dangerType">
                     <option value="">请选择一个风险类型</option>
-                    <option value="010">经营</option>
-                    <option value="021">法律</option>
-                    <option value="0571">市场</option>
-                    <option value="0571">信用</option>
-                    <option value="0571">高管</option>
-                    <option value="0571">子公司</option>
+                    <option value="经营">经营</option>
+                    <option value="法律">法律</option>
+                    <option value="市场">市场</option>
+                    <option value="信用">信用</option>
+                    <option value="高管">高管</option>
+                    <option value="子公司">子公司</option>
                 </select></div>
             <div class="layui-inline">
 
-                <select name="city" lay-verify="required">
+                <select name="city" lay-verify="required" id="dangerLevel">
                     <option value="">请选择一个风险等级</option>
-                    <option value="010">1</option>
-                    <option value="021">2</option>
-                    <option value="0571">3</option>
-                    <option value="0571">4</option>
-                    <option value="0571">5</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
             </div>
             <div class="layui-inline">
-                <button type="button" class="layui-btn" id="search_btn">查询</button>
+                <button type="button" class="layui-btn" id="btnSearch" onclick="btnSearch()">查询</button>
             </div>
         </div>
         <hr class="layui-bg-cyan">
@@ -183,6 +185,8 @@
 </script>
 <script>
         var myDate = new Date();
+
+
 
 
 
@@ -231,7 +235,9 @@ setInterval(function () {
     myGagugeChart.setOption(option_gauge, true);
     }
     })
-},2000);
+},5000);
+
+
 
 
 
@@ -317,6 +323,8 @@ function updateRadio() {
 
                             }
         setInterval(updateRadio, 5000);
+
+
 
 
 
@@ -439,6 +447,8 @@ function updateRadio() {
 
 
 
+
+
 </script>
 <script>
 //一般直接写在一个js文件中
@@ -523,10 +533,12 @@ start.config.max.month = date.month -1;
 
 
 
+
+
 </script>
 <script>
     $('#table').bootstrapTable({
-        url: '../static/json/{{company}}.json',
+        url: '/getJsonData/{{company}}',
         queryParams:"queryParams",
         toolbar:"#toolbar",
         pagination:"true",
@@ -535,6 +547,16 @@ start.config.max.month = date.month -1;
         pageSize:"10",
         pageList : [ '10', '15', '25' ],
         clickToSelect: true, //是否启用点击选中行
+        queryParams : function (params) {
+            	//console.log(params);
+                var temp = {
+                 startTime : $('#start_time').val(),
+                    endTime : $('#end_time').val(),
+                	riskType:$('#dangerType').val(),
+                	riskLevel:$('#dangerLevel').val(),
+                };
+                return temp;
+            },
 		paginationPreText: "<<",
 		paginationNextText: ">>",
         columns: [
@@ -649,7 +671,14 @@ start.config.max.month = date.month -1;
                 }
             })
         };
-    setInterval(updateNews, 5000);
+      //  setInterval(function(){$('#table').bootstrapTable('refresh');},5000)
+function btnSearch(){
+    $('#table').bootstrapTable('refresh');
+        $('#inputRelateCompany').val("");
+        $('#start_time').val("");
+        $('#end_time').val("");
+    };
+
 
 
 

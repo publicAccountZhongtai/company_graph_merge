@@ -11,6 +11,8 @@ from py2neo import Graph
 from flask import Flask, render_template, request, jsonify
 import json
 import random
+import time
+import datetime
 
 with open("static/json/all_events.json", "r", encoding="utf-8") as f:
     all_events = json.load(f)
@@ -18,9 +20,9 @@ with open("static/json/华信.json", "r", encoding="utf-8") as f:
     huaxin_events = json.load(f)
 with open("static/json/金茂.json", "r", encoding="utf-8") as f:
     jinmao_events = json.load(f)
-riskType = ["信用", "法律", "市场", "子公司", "高管", "经营"]
-riskLevel = [1, 2, 3, 4, 5]
-relateCompany = ["华信", "金茂"]
+# riskType = ["信用", "法律", "市场", "子公司", "高管", "经营"]
+# riskLevel = [1, 2, 3, 4, 5]
+# relateCompanys = ["华信", "金茂"]
 map4_data1 = []
 map4_data2 = []
 map4_data3 = []
@@ -282,13 +284,48 @@ def change():
     return render_template('change.html')
 
 
-@app.route('/updateNewsData', methods=['GET', 'POST'])
-def update_news_data():
-    re_data = random.choice(all_events)
-    re_data["riskType"] = random.choice(riskType)
-    re_data["riskLevel"] = random.choice(riskLevel)
-    re_data["relateCompany"] = random.choice(relateCompany)
-    return jsonify(re_data)
+@app.route('/getJsonData/<string:company>', methods=['GET', 'POST'])
+def get_json_data(company):
+    if company == "all":
+        with open("./static/json/all_events.json", "r", encoding="utf-8") as f:
+            all_result = json.load(f)
+        relateCompany = request.args['relateCompany']
+    else:
+        with open("./static/json/{}.json".format(company), "r", encoding="utf-8") as f:
+            all_result = json.load(f)
+        relateCompany = ""
+    riskType = request.args['riskType']
+    riskLevel = request.args['riskLevel']
+    startTime = request.args['startTime']
+    endTime = request.args['endTime']
+    if startTime == "":
+        startTimeStamp = 0
+    else:
+        startTimeStamp = int(time.mktime(time.strptime(startTime+" 00:00:00", "%Y-%m-%d %H:%M:%S")))
+    if endTime == "":
+        endTimeStamp = int(time.time())
+    else:
+        endTimeStamp = int(time.mktime(time.strptime(endTime+" 23:59:59", "%Y-%m-%d %H:%M:%S")))
+
+    result = []
+    for r in all_result:
+        news_date = int(time.mktime(time.strptime(r['date'], "%Y-%m-%d")))
+        if relateCompany == "" or r['relateCompany'] == relateCompany:
+            if riskType == "" or r['riskType'] == riskType:
+                if riskLevel == "" or r['riskLevel'] == riskLevel:
+                    if endTimeStamp >= news_date >= startTimeStamp:
+                        result.append(r)
+
+    return jsonify(result)
+
+
+# @app.route('/updateNewsData', methods=['GET', 'POST'])
+# def update_news_data():
+#     re_data = random.choice(all_events)
+#     re_data["riskType"] = random.choice(riskType)
+#     re_data["riskLevel"] = random.choice(riskLevel)
+#     re_data["relateCompany"] = random.choice(relateCompanys)
+#     return jsonify(re_data)
 
 
 @app.route('/updateSingleCompanyNewsData/<string:company>', methods=['GET', 'POST'])
@@ -299,8 +336,8 @@ def update_single_company_news_data(company):
         re_data = random.choice(jinmao_events)
     else:
         re_data = random.choice(all_events)
-    re_data["riskType"] = random.choice(riskType)
-    re_data["riskLevel"] = random.choice(riskLevel)
+    # re_data["riskType"] = random.choice(riskType)
+    # re_data["riskLevel"] = random.choice(riskLevel)
     return jsonify(re_data)
 
 

@@ -44,6 +44,7 @@
 
 
 
+
     </style>
 </head>
 <body class="layui-layout-body">
@@ -125,17 +126,17 @@
                            placeholder="结束时间(修改时间)">
                 </div>
             </div>
-            <div class="layui-inline">
+            <!-- <div class="layui-inline">
 
-                <select name="city" lay-verify="required" id="companyName">
+                <select name="city" lay-verify="required" id="companyName" onchange="A(this)">
                     <option value="">请选择一个公司</option>
                     <option value="华信">上海华信</option>
                     <option value="金茂">山东金茂</option>
                 </select>
-            </div>
+            </div> -->
             <div class="layui-inline">
                 <input type="text" name="title" required lay-verify="required" placeholder="请输入公司名" autocomplete="off"
-                       class="layui-input">
+                       class="layui-input" id="inputRelateCompany">
             </div>
             <div class="layui-inline">
 
@@ -179,27 +180,6 @@
 </div>
 <script type="text/javascript" src="../static/layui.js"></script>
 <script>
-    function btnSearch(){
-    var companyName = $('#companyName').val();
-    var companyName1 = $('#companyName1').val();
-    var dangerType = $('#dangerType').val();
-    var dangerLevel = $('#dangerLevel').val();
-    var allTableData = $('#table').bootstrapTable('getData');
-    var newArray = [];
-    for (var i in allTableData){
-        singleData =  JSON.stringify(allTableData[i]);
-        var riskType = singleData.riskType;
-        var riskLevel = singleData['riskLevel'];
-        var relateCompany = singleData['relateCompany'];
-        if (companyName.test(relateCompany))
-        {
-            newArray.push(allTableData[i]);
-        }
-        }
-    alert(newArray);
-    $('#table').bootstrapTable('load',newArray);
-    };
-
 
 
 </script>
@@ -216,7 +196,7 @@ var max = null;
 
 var start = laydate.render({
 elem: '#start_time',
-type: 'datetime',
+type: 'date',
 max: nowTime,
 btns: ['clear', 'confirm'],
 done: function(value, date){
@@ -227,7 +207,7 @@ end.config.min.month = date.month -1;
 });
 var end = laydate.render({
 elem: '#end_time',
-type: 'datetime',
+type: 'date',
 max: nowTime,
 done: function(value, date){
 if($.trim(value) == ''){
@@ -269,17 +249,30 @@ start.config.max.month = date.month -1;
 
 
 
+
 </script>
 <script>
     $('#table').bootstrapTable({
-        url: '../static/json/all_events.json',
+        url: '/getJsonData/all',
         queryParams:"queryParams",
         pagination:"true",
+        method:'get',
         sidePagination:"true",
         striped:true,
         pageSize:"12",
         pageList : [ '10', '15', '25' ],
         clickToSelect: true, //是否启用点击选中行
+        queryParams : function (params) {
+            	//console.log(params);
+                var temp = {
+                    startTime : $('#start_time').val(),
+                    endTime : $('#end_time').val(),
+                	relateCompany:$('#inputRelateCompany').val(),
+                	riskType:$('#dangerType').val(),
+                	riskLevel:$('#dangerLevel').val(),
+                };
+                return temp;
+            },
 		paginationPreText: "<<",
 		paginationNextText: ">>",
         columns: [
@@ -405,7 +398,14 @@ start.config.max.month = date.month -1;
                 }
             })
         };
-    setInterval(updateNews, 5000);
+   // setInterval(function(){$('#table').bootstrapTable('refresh');},5000)
+    //查询筛选按钮
+    function btnSearch(){
+    $('#table').bootstrapTable('refresh');
+        $('#inputRelateCompany').val("");
+        $('#start_time').val("");
+        $('#end_time').val("");
+    };
 
 
 
