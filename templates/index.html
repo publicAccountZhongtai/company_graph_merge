@@ -45,6 +45,7 @@
 
 
 
+
     </style>
 </head>
 <body class="layui-layout-body">
@@ -250,6 +251,7 @@ start.config.max.month = date.month -1;
 
 
 
+
 </script>
 <script>
     $('#table').bootstrapTable({
@@ -398,7 +400,18 @@ start.config.max.month = date.month -1;
                 }
             })
         };
-   // setInterval(function(){$('#table').bootstrapTable('refresh');},5000)
+ setInterval(
+        function(){
+        $.ajax({
+                url: '/ListenDataChange/all',
+                success: function (response) {
+                    if (response['isUpdate']){
+                    $('#table').bootstrapTable('refresh');
+                    }
+                }
+            })
+
+            },1000)
     //查询筛选按钮
     function btnSearch(){
     $('#table').bootstrapTable('refresh');
@@ -406,6 +419,7 @@ start.config.max.month = date.month -1;
         $('#start_time').val("");
         $('#end_time').val("");
     };
+
 
 
 

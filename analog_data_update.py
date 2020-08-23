@@ -11,7 +11,8 @@ def main():
     with open("./static/json/金茂.json", "r", encoding="utf-8") as f:
         jinmao = json.load(f)
     while True:
-        random_index = random.randint(0, 2)
+        # random_index = random.randint(0, 2)
+        random_index = int(input("请输入更新（0，1，2/全部，华信，金茂："))
         if random_index == 0:
             with open("./static/json/all_events.json", "w", encoding="utf-8") as f:
                 all_events = [random.choice(all_events)] + all_events
@@ -24,7 +25,6 @@ def main():
             with open("./static/json/金茂.json", "w", encoding="utf-8") as f:
                 jinmao = [random.choice(jinmao)] + jinmao
                 json.dump(jinmao, f, ensure_ascii=False)
-        time.sleep(3)
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 from datetime import timedelta
 from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom
 import json
+import os
 # 国玮代码片段
 from flask import Flask, render_template
 from py2neo_nandr_export import writefile1, writefile2
@@ -301,11 +302,11 @@ def get_json_data(company):
     if startTime == "":
         startTimeStamp = 0
     else:
-        startTimeStamp = int(time.mktime(time.strptime(startTime+" 00:00:00", "%Y-%m-%d %H:%M:%S")))
+        startTimeStamp = int(time.mktime(time.strptime(startTime + " 00:00:00", "%Y-%m-%d %H:%M:%S")))
     if endTime == "":
         endTimeStamp = int(time.time())
     else:
-        endTimeStamp = int(time.mktime(time.strptime(endTime+" 23:59:59", "%Y-%m-%d %H:%M:%S")))
+        endTimeStamp = int(time.mktime(time.strptime(endTime + " 23:59:59", "%Y-%m-%d %H:%M:%S")))
 
     result = []
     for r in all_result:
@@ -317,6 +318,31 @@ def get_json_data(company):
                         result.append(r)
 
     return jsonify(result)
+
+
+size_of_all_event = os.path.getsize("./static/json/all_events.json")
+size_of_huaxin = os.path.getsize("./static/json/华信.json")
+size_of_jinmao = os.path.getsize("./static/json/金茂.json")
+
+
+@app.route('/ListenDataChange/<string:company>', methods=['GET', 'POST'])
+def ListenDataChange(company):
+    global size_of_all_event, size_of_huaxin, size_of_jinmao
+    if company == "all":
+        temp = os.path.getsize("./static/json/all_events.json")
+        isUpdate = (size_of_all_event != temp)
+        size_of_all_event = temp
+    elif company == "华信":
+        temp = os.path.getsize("./static/json/华信.json")
+        isUpdate = (size_of_huaxin != temp)
+        size_of_huaxin = temp
+    elif company == "金茂":
+        temp = os.path.getsize("./static/json/金茂.json")
+        isUpdate = (size_of_jinmao != temp)
+        size_of_jinmao = temp
+    else:
+        isUpdate = False
+    return jsonify({"isUpdate": isUpdate})
 
 
 # @app.route('/updateNewsData', methods=['GET', 'POST'])

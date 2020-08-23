@@ -671,7 +671,18 @@ start.config.max.month = date.month -1;
                 }
             })
         };
-      //  setInterval(function(){$('#table').bootstrapTable('refresh');},5000)
+      setInterval(
+        function(){
+        $.ajax({
+                url: '/ListenDataChange/{{company}}',
+                success: function (response) {
+                    if (response['isUpdate']){
+                    $('#table').bootstrapTable('refresh');
+                    }
+                }
+            })
+
+            },100)
 function btnSearch(){
     $('#table').bootstrapTable('refresh');
         $('#inputRelateCompany').val("");
