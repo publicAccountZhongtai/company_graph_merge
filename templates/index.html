@@ -46,6 +46,7 @@
 
 
 
+
     </style>
 </head>
 <body class="layui-layout-body">
@@ -154,11 +155,11 @@
 
                 <select name="city" lay-verify="required" id="dangerLevel">
                     <option value="">请选择一个风险等级</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <option value="1">&#9733;</option>
+                    <option value="2">&#9733;&#9733;</option>
+                    <option value="3">&#9733;&#9733;&#9733;</option>
+                    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
                 </select>
             </div>
             <div class="layui-inline">
@@ -221,6 +222,7 @@ start.config.max.month = date.month -1;
 });
 
 });
+
 
 
 
@@ -419,6 +421,7 @@ start.config.max.month = date.month -1;
         $('#start_time').val("");
         $('#end_time').val("");
     };
+
 
 
 

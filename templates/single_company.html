@@ -40,6 +40,12 @@
 
 
 
+
+
+
+
+
+
     </style>
 </head>
 <body class="layui-layout-body">
@@ -108,15 +114,51 @@
             <div class="layui-row">
                 <div class="layui-col-md3">
                     <!--每日综合指数 -->
-                    <div id="gauge" style="height: 500px;padding:20px"></div>
+                    <div id="gauge" style="height: 400px;padding:20px"></div>
+                    <div class="layui-row layui-col-space10" style="margin:10px;">
+                        <div class="layui-col-md4">
+                            <input type="text" name="gauge_date" class="layui-input" id="gauge_date"
+                                   placeholder="">
+                        </div>
+                        <div class="layui-col-md5"><h4>日综合指数</h4></div>
+                        <div class="layui-col-md2">
+                            <button type="button" class="layui-btn" id="btnGaugeSearch"
+                                    onclick="btnGaugeDateSearch($('#gauge_date').val())">查询
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-col-md3">
                     <div id="radio"
-                         style="height: 500px;padding:20px"></div>
+                         style="height: 400px;padding:20px"></div>
+                    <div class="layui-row layui-col-space10" style="margin:10px;">
+                        <div class="layui-col-md4">
+                            <input type="text" name="radio_date" class="layui-input" id="radio_date"
+                                   placeholder="">
+                        </div>
+                        <div class="layui-col-md5"><h4>日舆情分布</h4></div>
+                        <div class="layui-col-md2">
+                            <button type="button" class="layui-btn" id="btnRadioSearch"
+                                    onclick="btnRadioDateSearch($('#radio_date').val())">查询
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-col-md6">
                     <div id="bar"
-                         style="height:500px;padding:20px"></div>
+                         style="height:400px;padding:20px"></div>
+                    <div class="layui-row layui-col-space10" style="margin:10px 200px 10px 200px;">
+                        <div class="layui-col-md4">
+                            <input type="text" name="bar_month" class="layui-input" id="bar_month"
+                                   placeholder="">
+                        </div>
+                        <div class="layui-col-md5"><h4>月舆情分布</h4></div>
+                        <div class="layui-col-md2">
+                            <button type="button" class="layui-btn" id="btnBarSearch"
+                                    onclick="btnBarDateSearch($('#bar_month').val())">查询
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,11 +197,11 @@
 
                 <select name="city" lay-verify="required" id="dangerLevel">
                     <option value="">请选择一个风险等级</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                    <option value="1">&#9733;</option>
+                    <option value="2">&#9733;&#9733;</option>
+                    <option value="3">&#9733;&#9733;&#9733;</option>
+                    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
                 </select>
             </div>
             <div class="layui-inline">
@@ -196,6 +238,12 @@
 
 
 
+
+
+
+
+
+
 </script>
 <script type="text/javascript">
     option_gauge = {
@@ -203,7 +251,7 @@
         formatter: '{a} <br/>{b} : {c}'
     },
     title: {
-            text: myDate.getDate()+'日综合指数',
+            text:'综合指数',
         },
     toolbox: {
         feature: {
@@ -220,22 +268,29 @@
     ]
 };
 var myGagugeChart = echarts.init(document.getElementById('gauge'));
-setInterval(function () {
+
+function btnGaugeDateSearch(gauge_date){
         $.ajax({
-                url: '/updateGaugeData',
-                type:'POST',
-                dataType:'json',
-                data:{
-                data: JSON.stringify({
-                    'gaugeNum': option_gauge.series[0].data[0].value,
-                }),
-            },
+                url: '/updateGaugeData/{{company}}/'+gauge_date,
+                type:'GET',
+                //dataType:'json',
+                //data:{
+                //data: JSON.stringify({
+                    //'gaugeNum': option_gauge.series[0].data[0].value,
+                //}),
+           // },
                 success: function (response){
     option_gauge.series[0].data[0].value = response['gaugeNum'];
     myGagugeChart.setOption(option_gauge, true);
-    }
+        }
     })
-},5000);
+}
+$(document).ready(btnGaugeDateSearch("init"));
+
+
+
+
+
 
 
 
@@ -252,7 +307,7 @@ setInterval(function () {
     //指定图标的配置和数据
     var option_radio = {
         title: {
-            text: myDate.getDate()+'日舆情雷达图',
+            text: '日舆情分布',
         },
         toolbox:{
                         feature:{
@@ -273,12 +328,12 @@ setInterval(function () {
                 }
             },
             indicator: [
-                {name: '经营', max: 100},
-                {name: '信用', max: 100},
-                {name: '法律', max: 100},
-                {name: '市场', max: 100},
-                {name: '高管', max: 100},
-                {name: '子公司', max: 100}
+                {name: '经营', max: 10},
+                {name: '信用', max: 10},
+                {name: '法律', max: 10},
+                {name: '市场', max: 10},
+                {name: '高管', max: 10},
+                {name: '子公司', max: 10}
             ]
         },
         series: [{
@@ -286,43 +341,39 @@ setInterval(function () {
             type: 'radar',
             areaStyle: {normal: {}},
             data: [
-                {name: "新闻数量", value: [51, 38, 27, 19, 62,73]}
+                {name: "新闻数量", value: []}
             ]
         }]
     };
     //初始化echarts实例
     var myRadioChart = echarts.init(document.getElementById('radio'));
-
-    //使用制定的配置项和数据显示图表
-    myRadioChart.setOption(option_radio);
-function updateRadio() {
+    function btnRadioDateSearch(radio_date)
+        {
             $.ajax({
-                url: '/updateRadioData',
-                type:'POST',
-                dataType:'json',
-                data:{
-                data: JSON.stringify({
-                    'radio_data': option_radio.series[0].data[0].value,
-                    }),
-                },
+                url: '/updateRadioData/{{company}}/'+radio_date,
+                type:'GET',
+                //dataType:'json',
+                //data:{
+                //data: JSON.stringify({
+                    //'radio_data': option_radio.series[0].data[0].value,
+                   // }),
+               // },
                 success: function (response) {
-                myRadioChart.setOption(
-                {
-                series: [{
-            name: '新闻数',
-            type: 'radar',
-            areaStyle: {normal: {}},
-            data: [
-                {name: "新闻数量", value: response['radio_data']}
-            ]
-        }]
+                option_radio.series[0].data[0].value=response['radio_data']
+                myRadioChart.setOption(option_radio,true);
+
                         }
-                )
-                      }
+
             })
 
-                            }
-        setInterval(updateRadio, 5000);
+        }
+$(document).ready(btnRadioDateSearch("init"));
+
+
+
+
+
+
 
 
 
@@ -333,14 +384,7 @@ function updateRadio() {
 
 </script>
 <script type="text/javascript">// 基于准备好的dom，初始化echarts实例
-
-        var map4_data1=[];
-        var map4_data2=[];
-        var map4_data3=[];
-
         var myBarChart = echarts.init(document.getElementById('bar'));
-
-
         var option_bar = {
                         color: ['#ffdf25', '#36a9ce', '#d0e17d'],
                         toolbox:{
@@ -356,7 +400,7 @@ function updateRadio() {
                         },
                         title:{
                         show:true,
-                        text:myDate.getMonth()+"月舆情分布值",
+                        text:"月舆情分布",
                         },
                         grid: {
                             left: '3%',
@@ -392,54 +436,43 @@ function updateRadio() {
                                 name: '负面舆情',
                                 type: 'bar',
                                 barGap: 0,
-                                data: map4_data1
+                                data: []
                             },
                             {
                                 name: '自身风险',
                                 type: 'bar',
-                                data: map4_data2
+                                data: []
                             },
                             {
                                 name: '关联风险',
                                 type: 'bar',
-                                data: map4_data3
+                                data: []
                             },
                         ]
         };
 
         // 使用刚指定的配置项和数据显示图表。
-        myBarChart.setOption(option_bar);
-        function updateBar() {
+        function btnBarDateSearch(bar_month) {
             $.ajax({
-                url: '/updateBarData',
-                success: function (response) {
-                myBarChart.setOption(
+                url: '/updateBarData/{{company}}/'+bar_month,
+                success: function (response)
                 {
-                series: [
-                            {
-                                name: '负面舆情',
-                                type: 'bar',
-                                barGap: 0,
-                                data: response['map4_data1']
-                            },
-                            {
-                                name: '自身风险',
-                                type: 'bar',
-                                data: response['map4_data2']
-                            },
-                            {
-                                name: '关联风险',
-                                type: 'bar',
-                                data: response['map4_data3']
-                            },
-                        ]
-                        }
-                )
-                      }
+                option_bar.series[0].data =  response['data0'];
+                option_bar.series[1].data =  response['data1'];
+                option_bar.series[2].data =  response['data2'];
+                myBarChart.setOption(option_bar);
+                }
             })
 
-                            }
-        setInterval(updateBar, 5000);
+        }
+    $(document).ready(btnBarDateSearch("init"));
+
+
+
+
+
+
+
 
 
 
@@ -460,12 +493,33 @@ layui.use(['layer', 'form','element','laydate'], function(){
   var laydate = layui.laydate;
 var nowTime = new Date().valueOf();
 var max = null;
+var gaugeDate = laydate.render({
+elem: '#gauge_date',
+value: myDate.getFullYear()+'-'+("0" + (myDate.getMonth() + 1)).slice(-2)+'-'+myDate.getDate(),
+type: 'date',
+max: nowTime,
+btns: ['clear','now', 'confirm'],
+});
+var radioDate = laydate.render({
+elem: '#radio_date',
+value: myDate.getFullYear()+'-'+("0" + (myDate.getMonth() + 1)).slice(-2)+'-'+myDate.getDate(),
+type: 'date',
+max: nowTime,
+btns: ['clear','now', 'confirm'],
+});
+var barMonth = laydate.render({
+elem: '#bar_month',
+value: myDate.getFullYear()+'-'+("0" + (myDate.getMonth() + 1)).slice(-2),
+type: 'month',
+max: nowTime,
+btns: ['clear','now', 'confirm'],
+});
 
 var start = laydate.render({
 elem: '#start_time',
 type: 'date',
 max: nowTime,
-btns: ['clear', 'confirm'],
+btns: ['clear','now', 'confirm'],
 done: function(value, date){
 endMax = end.config.max;
 end.config.min = date;
@@ -487,6 +541,12 @@ start.config.max.month = date.month -1;
 });
 
 });
+
+
+
+
+
+
 
 
 
@@ -678,17 +738,26 @@ start.config.max.month = date.month -1;
                 success: function (response) {
                     if (response['isUpdate']){
                     $('#table').bootstrapTable('refresh');
+                    btnRadioDateSearch($('#radio_date').val());
+                    btnGaugeDateSearch($('#gauge_date').val())
+                    btnBarDateSearch($('#bar_month').val())
                     }
                 }
             })
 
-            },100)
+            },5000)
 function btnSearch(){
     $('#table').bootstrapTable('refresh');
         $('#inputRelateCompany').val("");
         $('#start_time').val("");
         $('#end_time').val("");
     };
+
+
+
+
+
+
 
 
 

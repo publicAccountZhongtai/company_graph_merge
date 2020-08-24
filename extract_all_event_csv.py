@@ -54,16 +54,22 @@ def extract_csv_json(file):
                  "riskType": random.choice(riskType),
                  "riskLevel": random.choice(riskLevel),
                  })
+    events.sort(key=lambda news: (news['date'], news['Time']), reverse=True)
     with open("static/json/{}.json".format(file), "w", encoding="utf-8") as f:
-        json.dump(events, f, ensure_ascii=False)
+        json.dump(events[10:-1], f, ensure_ascii=False, indent=2)
+    with open("static/json/{}_add.json".format(file), "w", encoding="utf-8") as f:
+        json.dump(events[0:10], f, ensure_ascii=False, indent=2)
 
 
 def main():
     file3 = "系统开发相关资料/T_NEWS_TEXT_FCDB_新闻主表（新版负面）.csv"
     events = []
     events += get_data_from_file(file3, 1, 2, 4)
+    events.sort(key=lambda news: (news['date'], news['Time']), reverse=True)
     with open("static/json/all_events.json", "w", encoding="utf-8") as f:
-        json.dump(events, f, ensure_ascii=False)
+        json.dump(events[10:-1], f, ensure_ascii=False, indent=2)
+    with open("static/json/all_events_add.json", "w", encoding="utf-8") as f:
+        json.dump(events[0:10], f, ensure_ascii=False, indent=2)
     extract_csv_json("华信")
     extract_csv_json("金茂")
 

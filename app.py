@@ -21,12 +21,6 @@ with open("static/json/华信.json", "r", encoding="utf-8") as f:
     huaxin_events = json.load(f)
 with open("static/json/金茂.json", "r", encoding="utf-8") as f:
     jinmao_events = json.load(f)
-# riskType = ["信用", "法律", "市场", "子公司", "高管", "经营"]
-# riskLevel = [1, 2, 3, 4, 5]
-# relateCompanys = ["华信", "金茂"]
-map4_data1 = []
-map4_data2 = []
-map4_data3 = []
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
@@ -356,6 +350,7 @@ def ListenDataChange(company):
 
 @app.route('/updateSingleCompanyNewsData/<string:company>', methods=['GET', 'POST'])
 def update_single_company_news_data(company):
+    """失效"""
     if company == "华信":
         re_data = random.choice(huaxin_events)
     elif company == "金茂":
@@ -367,29 +362,123 @@ def update_single_company_news_data(company):
     return jsonify(re_data)
 
 
-@app.route('/updateBarData', methods=['GET', 'POST'])
-def update_bar_data():
-    map4_data1.append(random.randint(100, 200))
-    map4_data2.append(random.randint(100, 200))
-    map4_data3.append(random.randint(100, 200))
-    return jsonify({'map4_data1': map4_data1, 'map4_data2': map4_data2, 'map4_data3': map4_data3})
+@app.route('/updateBarData/<string:company>/<string:barMonth>', methods=['GET', 'POST'])
+def update_bar_data(company, barMonth):
+    if barMonth == "init":
+        current_month = time.strftime('%Y-%m', time.localtime(time.time()))
+    else:
+        current_month = barMonth
+    with open("static/json/{}.json".format(company), "r", encoding="utf-8") as f:
+        events = json.load(f)
+    is_current_date = True
+    data0 = [0 for _ in range(31)]
+    data1 = [0 for _ in range(31)]
+    data2 = [0 for _ in range(31)]
+    risk_type_weight0 = {
+        "经营": 2,
+        "信用": 3,
+        "法律": 2,
+        "高管": 1,
+        "子公司": 1,
+        "市场": 3,
+
+    }
+    risk_type_weight1 = {
+        "经营": 4,
+        "信用": 1,
+        "法律": 5,
+        "高管": 2,
+        "子公司": 6,
+        "市场": 3,
+
+    }
+    risk_type_weight2 = {
+        "经营": 2,
+        "信用": 6,
+        "法律": 2,
+        "高管": 4,
+        "子公司": 2,
+        "市场": 3,
+
+    }
+    for event in events:
+        if event['date'][0:7] == current_month:
+            data0[int(event['date'][7:-1]) - 1] += risk_type_weight0[event['riskType']]
+            data1[int(event['date'][7:-1]) - 1] += risk_type_weight1[event['riskType']]
+            data2[int(event['date'][7:-1]) - 1] += risk_type_weight2[event['riskType']]
+            is_current_date = False
+        elif is_current_date:
+            continue
+        else:
+            break
+    return jsonify({'data0': data0, 'data1': data1, 'data2': data2})
 
 
-@app.route('/updateRadioData', methods=['GET', 'POST'])
-def update_radio_data():
-    data = json.loads(request.form.get('data'))
-    for i in range(len(data['radio_data'])):
-        if data['radio_data'][i] < 100:
-            data['radio_data'][i] += random.randint(1, 3)
-    return jsonify(data)
+@app.route('/updateRadioData/<string:company>/<string:radioDate>', methods=['GET', 'POST'])
+def update_radio_data(company, radioDate):
+    # data = json.loads(request.form.get('data'))
+    # for i in range(len(data['radio_data'])):
+    #     if data['radio_data'][i] < 100:
+    #         data['radio_data'][i] += random.randint(1, 3)
+    if radioDate == "init":
+        current_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+    else:
+        current_date = radioDate
+    with open("static/json/{}.json".format(company), "r", encoding="utf-8") as f:
+        events = json.load(f)
+    is_current_date = True
+    data = [0 for _ in range(6)]
+    risk_type_index = {
+        "经营": 0,
+        "信用": 1,
+        "市场": 2,
+        "法律": 3,
+        "高管": 4,
+        "子公司": 5,
+    }
+    for event in events:
+        if event['date'] == current_date:
+            data[risk_type_index[event['riskType']]] += 1
+            is_current_date = False
+        elif is_current_date:
+            continue
+        else:
+            break
+    return jsonify({"radio_data": data})
 
 
-@app.route('/updateGaugeData', methods=['POST'])
-def update_gauge_data():
-    data = json.loads(request.form.get('data'))
-    if random.random() > 0.5 and data['gaugeNum'] < 100:
-        data['gaugeNum'] += 1
-    return jsonify(data)
+@app.route('/updateGaugeData/<string:company>/<string:gaugeDate>', methods=['GET', 'POST'])
+def update_gauge_data(company, gaugeDate):
+    # data = json.loads(request.form.get('data'))
+    # if random.random() > 0.5 and data['gaugeNum'] < 100:
+    #     data['gaugeNum'] += 1
+    # current_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+    if gaugeDate == "init":
+        current_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+    else:
+        current_date = gaugeDate
+    gaugeNum = 0
+    risk_type_weight = {
+        "经营": 2,
+        "信用": 3,
+        "法律": 2,
+        "高管": 1,
+        "子公司": 1,
+        "市场": 3,
+
+    }
+    with open("static/json/{}.json".format(company), "r", encoding="utf-8") as f:
+        events = json.load(f)
+    is_current_date = True
+    for event in events:
+        if event['date'] == current_date:
+            gaugeNum += risk_type_weight[event['riskType']]
+            is_current_date = False
+        elif is_current_date:
+            continue
+        else:
+            break
+    return jsonify({"gaugeNum": gaugeNum})
 
 
 @app.route('/')
