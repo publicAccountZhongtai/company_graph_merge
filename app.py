@@ -481,15 +481,53 @@ def update_gauge_data(company, gaugeDate):
     return jsonify({"gaugeNum": gaugeNum})
 
 
+@app.route('/index/<string:user>', methods=['GET', 'POST'])
+def index(user, name="index"):
+    return render_template("index.html", name=name, user=user)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register(name="register"):
+    return render_template("register.html", name=name)
+
+
 @app.route('/')
-@app.route('/index')
-def index(name="index"):
-    return render_template("index.html", name=name)
+@app.route('/login', methods=['GET', 'POST'])
+def login(name="login"):
+    return render_template("login.html", name=name)
 
 
-@app.route('/single_company/<string:company>')
+@app.route('/single_company/<string:company>', methods=['GET', 'POST'])
 def single_company(company, name="single_company"):
     return render_template("single_company.html", name=name, company=company)
+
+
+@app.route('/checkRegister', methods=['POST'])
+def check_register():
+    data = json.loads(request.form.get('data'))
+    print(data)
+    with open("./static/json/users.json", "r", encoding="utf-8") as f:
+        accounts = json.load(f)
+    user_name = [a['user'] for a in accounts]
+    if data['user'] in user_name:
+        return jsonify({'isRegister': False})
+    else:
+        accounts.append(data)
+        with open("./static/json/users.json", "w", encoding="utf-8") as f:
+            json.dump(accounts, f, ensure_ascii=False, indent=2)
+        return jsonify({'isRegister': True})
+
+
+@app.route('/checkLogin', methods=['POST'])
+def check_login():
+    data = json.loads(request.form.get('data'))
+    print(data)
+    with open("./static/json/users.json", "r", encoding="utf-8") as f:
+        accounts = json.load(f)
+    if data in accounts:
+        return jsonify({'isLogin': True})
+    else:
+        return jsonify({'isLogin': False})
 
 
 if __name__ == '__main__':
