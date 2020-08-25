@@ -14,6 +14,7 @@ import json
 import random
 import time
 import datetime
+import pymysql
 
 with open("static/json/all_events.json", "r", encoding="utf-8") as f:
     all_events = json.load(f)
@@ -502,29 +503,51 @@ def single_company(company, name="single_company"):
     return render_template("single_company.html", name=name, company=company)
 
 
-@app.route('/checkRegister', methods=['POST'])
-def check_register():
+connect = pymysql.Connect(
+    host='localhost',
+    port=3306,
+    user='root',
+    passwd='sgxsgwbd',
+    db='useraccount',
+    charset='utf8'
+)
+
+
+@app.route('/checkUser', methods=['POST'])
+def check_user():
     data = json.loads(request.form.get('data'))
-    print(data)
-    with open("./static/json/users.json", "r", encoding="utf-8") as f:
-        accounts = json.load(f)
-    user_name = [a['user'] for a in accounts]
-    if data['user'] in user_name:
-        return jsonify({'isRegister': False})
+    cursor = connect.cursor()
+    sql = "select * from users WHERE username ='%s'" % data['user']
+    cursor.execute(sql)
+    if cursor.rowcount > 0:
+        cursor.close()
+        return jsonify({'valid': False})
+
     else:
-        accounts.append(data)
-        with open("./static/json/users.json", "w", encoding="utf-8") as f:
-            json.dump(accounts, f, ensure_ascii=False, indent=2)
+        cursor.close()
+        return jsonify({'valid': True})
+
+
+@app.route('/reg', methods=['POST'])
+def reg():
+    data = json.loads(request.form.get('data'))
+    cursor = connect.cursor()
+    sql = "insert into users values (null,'%s','%s','%s')" % (data['user'], data['pwd'], data['user'] + "的账号");
+    result = cursor.execute(sql)
+    connect.commit()
+    if result:
         return jsonify({'isRegister': True})
+    else:
+        return jsonify({'isRegister': False})
 
 
 @app.route('/checkLogin', methods=['POST'])
 def check_login():
     data = json.loads(request.form.get('data'))
-    print(data)
-    with open("./static/json/users.json", "r", encoding="utf-8") as f:
-        accounts = json.load(f)
-    if data in accounts:
+    cursor = connect.cursor()
+    sql = "select * from users where username='%s' and password='%s'" % (data['user'], data['pwd'])
+    cursor.execute(sql)
+    if cursor.rowcount:
         return jsonify({'isLogin': True})
     else:
         return jsonify({'isLogin': False})
