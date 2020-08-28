@@ -1,0 +1,52 @@
+<style type="text/css">
+    .layui-nav-tree {
+        font-weight: bold;
+        font-size: 100px;
+        line-height: 50px;
+    }
+
+
+</style>
+<div class="layui-side-scroll">
+    <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+    <ul class="layui-nav layui-nav-tree" lay-filter="test" lay-shrink="all">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a class="" href="javascript:;">新闻实时展示</a>
+            <dl class="layui-nav-child">
+                <dd><a href="/index">全部企业新闻</a></dd>
+                <dd><a href="/companys/华信">上海华信</a></dd>
+                <dd><a href="/companys/金茂">山东金茂</a></dd>
+                <dd>
+                    <div class="layui-input-inline">
+
+                        <input style="width:100px;padding:0px 0px 0px 15px; margin:0px 0px 0px 15px;"
+                               type="text"
+                               name="title" required lay-verify="required" placeholder="更多"
+                               autocomplete="off" class="layui-input" id="inputcompany">
+                    </div>
+                    <button type="button" class="layui-btn"
+                            onclick="location='/companys/'+document.getElementById(&quot;inputcompany&quot;).value;">
+                        查询
+                    </button>
+                </dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">图谱操作</a>
+            <dl class="layui-nav-child">
+                <dd><a href="/企业信息展示">企业展示</a></dd>
+                <dd><a href="/企业关联信息展示">关联信息展示</a></dd>
+            </dl>
+        </li>
+
+        <li class="layui-nav-item">
+            <a href="javascript:;">增删改查</a>
+            <dl class="layui-nav-child">
+                <dd class="layui-nav-item"><a href="/add">增加节点</a></dd>
+                <dd class="layui-nav-item"><a href="/delete">删除节点</a></dd>
+                <dd class="layui-nav-item"><a href="/change">改变节点</a></dd>
+                <dd class="layui-nav-item"><a href="/search">查询节点</a></dd>
+            </dl>
+        </li>
+    </ul>
+</div>

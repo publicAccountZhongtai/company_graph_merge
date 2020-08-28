@@ -1,41 +1,26 @@
 from py2neo import Graph, Node, Relationship, Subgraph, walk, NodeMatcher, RelationshipMatcher
-from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
 from datetime import timedelta
 from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom
-import json
 import os
-# 国玮代码片段
-from flask import Flask, render_template
 from py2neo_nandr_export import writefile1, writefile2
 from py2neo import Graph
 
 from flask import Flask, render_template, request, jsonify
 import json
-import random
 import time
-import datetime
 import pymysql
 
 with open("static/json/all_events.json", "r", encoding="utf-8") as f:
     all_events = json.load(f)
 with open("static/json/华信.json", "r", encoding="utf-8") as f:
-    huaxin_events = json.load(f)
+    hua_xin_events = json.load(f)
 with open("static/json/金茂.json", "r", encoding="utf-8") as f:
-    jinmao_events = json.load(f)
+    jin_mao_events = json.load(f)
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
 graph = Graph("http://localhost:7474", username="neo4j", password="neo4j123")
 app.send_file_max_age_default = timedelta(seconds=1)
-
-# 主界面密码系统
-addcode = "add"
-searchcode = "search"
-deletecode = "delete"
-changecode = "change"
-
-
-# 国玮代码片段
 
 
 # 定义OGM的类
@@ -73,6 +58,7 @@ class Position(GraphObject):
     member = RelatedTo("Shareholder", "成员")
 
 
+# 从图谱中提取主体名称写入  所有公司.json
 writefile1()
 
 companys = []
@@ -97,10 +83,6 @@ def index2():
 def add():
     if request.method == 'POST':
 
-        # rechoose = request.form.get("choose")
-        # if len(rechoose) > 0:
-        # return redirect("http://0.0.0.0:8091/")
-
         graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
 
         user_input1 = request.form.get("company")
@@ -111,12 +93,8 @@ def add():
 
         if len(user_input1) > 0:
             matcher = NodeMatcher(graph)
-            # node1 = matcher.match("Company", name=user_input1).first()
             node2 = matcher.match("Position", name=user_input2, company=user_input1).first()
-            # node1 = Node("Company", name=user_input1)
-            # node2 = Node("Position", name=user_input2)
             node3 = Node("name", name=user_input3)
-
             relationship1 = Relationship(node3, "属于", node2)
 
             total_add1 = node3 | relationship1
@@ -131,38 +109,6 @@ def add():
             graph.create(total_add2)
 
     return render_template('add.html')
-
-
-'''
-        user_input1 = request.form.get("label")
-        user_input2 = request.form.get("name")
-        user_input3 = request.form.get("height")
-
-
-        user_input4 = request.form.get("new_caption")
-        user_input5 = request.form.get("description")
-
-        user_input6 = request.form.get("f_nodename")
-        user_input7 = request.form.get("b_nodename")
-        user_input8 = request.form.get("new_rel")
-
-        matcher = NodeMatcher(graph)
-        x1 = matcher.match("Shareholder", name=user_input6).first()
-        x2 = matcher.match("Company", name=user_input7).first()
-
-        #对于新增节点该是新增属性的判定
-        if len(user_input4) > 0:
-            a = Node(user_input1, name=user_input2, height=user_input3)
-            a[user_input4] = user_input5
-            graph.create(a)
-        if len(user_input6) > 0:
-            relationship = Relationship(x1, user_input8, x2)
-            graph.create(relationship)
-        if (len(user_input4)==0)&(len(user_input6)==0):
-            a = Node(user_input1, name=user_input2, height=user_input3)
-            graph.create(a)
-
-'''
 
 
 # 搜索系统flask框架
@@ -185,9 +131,6 @@ def search():
         relist = list(relmatch.match())
         reldict = dict(zip(numlist2, relist))
 
-        # nodedict1 = json.dumps(nodedict, encoding='UTF-8', ensure_ascii=False)
-        # reldict1 = json.dumps(reldict, encoding='UTF-8', ensure_ascii=False)
-
         return render_template('index.html', **nodedict, **reldict)
 
     return render_template('search.html')
@@ -206,17 +149,6 @@ def delete():
 
         if len(user_delete) > 0:
             graph.delete(user_delnode)
-
-        '''
-        if len(user_del1) > 0:
-            if user_del3 == "股东":
-                user_delnode1.shareholder.remove(user_delnode2)
-                graph.push(user_delnode1)
-
-            if user_del3 == "经营":
-                user_delnode.manager.remove(user_delnode2)
-                graph.push(user_delnode1)
-        '''
     return render_template('delete.html')
 
 
@@ -230,11 +162,6 @@ def change():
         user_change2 = request.form.get("change_position")
         user_change3 = request.form.get("change_name")
         user_change4 = request.form.get("new_name")
-
-        # user_changeposition = Position.match(graph, user_change2).first()
-
-        # user_changenode1 = Shareholder.match(graph, user_changerel1).first()
-        # user_changenode2 = Company.match(graph, user_changerel2).first()
 
         matcher = NodeMatcher(graph)
         company_node = matcher.match("Company", name=user_change1).first()
@@ -250,36 +177,10 @@ def change():
 
         total_change = new_rel | new_node
         graph.create(total_change)
-
-        '''
-        # 单节点对应属性修改
-        if len(user_change1) > 0:
-
-            if user_change2 == "height":
-                user_changenode.height = user_change3
-            if user_change2 == "age":
-                user_changenode.age = user_change3
-
-            graph.push(user_changenode)
-
-        # 节点关系修改
-        if len(user_changerel1) > 0:
-            if user_changerel3 == "经营":
-                user_changenode1.manager.remove(user_changenode2)
-                graph.push(user_changenode1)
-                relationship = Relationship(x1, user_changerel4, x2)
-                graph.create(relationship)
-
-            if user_changerel3 == "股东":
-                user_changenode1.shareholder.remove(user_changenode2)
-                graph.push(user_changenode1)
-                relationship = Relationship(x1, user_changerel4, x2)
-                graph.create(relationship)
-        '''
-
     return render_template('change.html')
 
 
+# 获取以及筛选新闻展示页新闻内容
 @app.route('/getJsonData/<string:company>', methods=['GET', 'POST'])
 def get_json_data(company):
     if company == "all":
@@ -320,6 +221,7 @@ size_of_huaxin = os.path.getsize("./static/json/华信.json")
 size_of_jinmao = os.path.getsize("./static/json/金茂.json")
 
 
+# 判断是否有增加新闻，判断依据为存储新闻的文件大小改变
 @app.route('/ListenDataChange/<string:company>', methods=['GET', 'POST'])
 def ListenDataChange(company):
     global size_of_all_event, size_of_huaxin, size_of_jinmao
@@ -340,29 +242,7 @@ def ListenDataChange(company):
     return jsonify({"isUpdate": isUpdate})
 
 
-# @app.route('/updateNewsData', methods=['GET', 'POST'])
-# def update_news_data():
-#     re_data = random.choice(all_events)
-#     re_data["riskType"] = random.choice(riskType)
-#     re_data["riskLevel"] = random.choice(riskLevel)
-#     re_data["relateCompany"] = random.choice(relateCompanys)
-#     return jsonify(re_data)
-
-
-@app.route('/updateSingleCompanyNewsData/<string:company>', methods=['GET', 'POST'])
-def update_single_company_news_data(company):
-    """失效"""
-    if company == "华信":
-        re_data = random.choice(huaxin_events)
-    elif company == "金茂":
-        re_data = random.choice(jinmao_events)
-    else:
-        re_data = random.choice(all_events)
-    # re_data["riskType"] = random.choice(riskType)
-    # re_data["riskLevel"] = random.choice(riskLevel)
-    return jsonify(re_data)
-
-
+# 更新以及筛选柱状图数据信息
 @app.route('/updateBarData/<string:company>/<string:barMonth>', methods=['GET', 'POST'])
 def update_bar_data(company, barMonth):
     if barMonth == "init":
@@ -415,12 +295,9 @@ def update_bar_data(company, barMonth):
     return jsonify({'data0': data0, 'data1': data1, 'data2': data2})
 
 
+# 更新及筛选雷达图信息
 @app.route('/updateRadioData/<string:company>/<string:radioDate>', methods=['GET', 'POST'])
 def update_radio_data(company, radioDate):
-    # data = json.loads(request.form.get('data'))
-    # for i in range(len(data['radio_data'])):
-    #     if data['radio_data'][i] < 100:
-    #         data['radio_data'][i] += random.randint(1, 3)
     if radioDate == "init":
         current_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
     else:
@@ -448,12 +325,9 @@ def update_radio_data(company, radioDate):
     return jsonify({"radio_data": data})
 
 
+# 更新及筛选仪表盘数据信息
 @app.route('/updateGaugeData/<string:company>/<string:gaugeDate>', methods=['GET', 'POST'])
 def update_gauge_data(company, gaugeDate):
-    # data = json.loads(request.form.get('data'))
-    # if random.random() > 0.5 and data['gaugeNum'] < 100:
-    #     data['gaugeNum'] += 1
-    # current_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
     if gaugeDate == "init":
         current_date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
     else:
@@ -482,27 +356,44 @@ def update_gauge_data(company, gaugeDate):
     return jsonify({"gaugeNum": gaugeNum})
 
 
-@app.route('/index/<string:user>', methods=['GET', 'POST'])
-def index(user, name="index"):
-    return render_template("index.html", name=name, user=user)
+# 全部新闻展示页面
+@app.route('/index', methods=['GET', 'POST'])
+def index(name="index"):
+    return render_template("index.html", name=name, company="全部")
 
 
+# 侧边导航栏公关模板
+@app.route('/side', methods=['GET', 'POST'])
+def side():
+    return render_template('side.html')
+
+
+# 底部公关模板
+@app.route('/footer', methods=['GET', 'POST'])
+def footer():
+    return render_template('footer.html')
+
+
+# 用户注册页面
 @app.route('/register', methods=['GET', 'POST'])
 def register(name="register"):
     return render_template("register.html", name=name)
 
 
+# 用户登陆界面
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login(name="login"):
     return render_template("login.html", name=name)
 
 
-@app.route('/single_company/<string:company>', methods=['GET', 'POST'])
-def single_company(company, name="single_company"):
-    return render_template("single_company.html", name=name, company=company)
+# 单独企业展示界面
+@app.route('/companys/<string:company>', methods=['GET', 'POST'])
+def single_company(company, name="companys"):
+    return render_template("company.html", name=name, company=company)
 
 
+# 用户信息存储mysql数据库
 connect = pymysql.Connect(
     host='localhost',
     port=3306,
@@ -513,6 +404,7 @@ connect = pymysql.Connect(
 )
 
 
+# 判断注册用户名是否重名
 @app.route('/checkUser', methods=['POST'])
 def check_user():
     data = json.loads(request.form.get('data'))
@@ -528,6 +420,7 @@ def check_user():
         return jsonify({'valid': True})
 
 
+# 判断注册是否成功
 @app.route('/reg', methods=['POST'])
 def reg():
     data = json.loads(request.form.get('data'))
@@ -541,6 +434,7 @@ def reg():
         return jsonify({'isRegister': False})
 
 
+# 判断登陆是否成功
 @app.route('/checkLogin', methods=['POST'])
 def check_login():
     data = json.loads(request.form.get('data'))

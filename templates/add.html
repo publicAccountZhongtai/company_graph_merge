@@ -14,27 +14,15 @@
     <script src="../static/js/bootstrap.min.js"></script>
     <script src="../static/js/bootstrap-table.js"></script>
     <script src="../static/js/bootstrap-table-zh-CN.js"></script>
-    <style type="text/css">
-        .layui-nav-tree .layui-nav-item{
-    font-weight:bold;
-        font-size:50px;
-        line-height:50px;
-    }
-
-    </style>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">中泰证券</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="/add">增加节点</a></li>
-            <li class="layui-nav-item"><a href="/delete">删除节点</a></li>
-            <li class="layui-nav-item"><a href="/change">改变节点</a></li>
-            <li class="layui-nav-item"><a href="/search">查询节点</a></li>
+        <h3 style="color:#ffffff; text-align:center">企业图谱操作</h3>
 
-        </ul>
+
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
@@ -50,44 +38,11 @@
         </ul>
     </div>
 
-    <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree" lay-filter="test" lay-shrink="all">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">新闻实时展示</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="/index">全部企业新闻</a></dd>
-                        <dd><a href="/single_company/华信">上海华信</a></dd>
-                        <dd><a href="/single_company/金茂">山东金茂</a></dd>
-                        <dd>
-                            <div class="layui-input-inline">
-
-                                <input style="width:100px;padding:0px 0px 0px 15px; margin:0px 0px 0px 15px;"
-                                       type="text"
-                                       name="title" required lay-verify="required" placeholder="更多"
-                                       autocomplete="off" class="layui-input" id="inputcompany">
-                            </div>
-                            <button type="button" class="layui-btn"
-                                    onclick="location='/single_company/'+document.getElementById(&quot;inputcompany&quot;).value;">
-                                查询
-                            </button>
-                        </dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">图谱操作</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="/企业信息展示">企业展示</a></dd>
-                        <dd><a href="/企业关联信息展示">关联信息展示</a></dd>
-                    </dl>
-                </li>
-
-                <li class="layui-nav-item"><a href="/add">增删改查</a></li>
-            </ul>
-        </div>
+    <div class="layui-side layui-bg-black" id="side">
+        <script>
+            $("#side").load("/side")
+        </script>
     </div>
-
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <a href="javascript:void(0)" Onclick="document.getElementById('add').style.display='block';
@@ -103,8 +58,9 @@
             <form action="" enctype='multipart/form-data' method='POST'>
                 <br>
                 <style>
-                                        body{text-align: center}
-
+                    body {
+                        text-align: center
+                    }
 
 
                 </style>
@@ -134,10 +90,9 @@
             </form>
             <button onclick="tz()">返回主界面</button>
             <script>
-                                    function tz(){
-                                    window.location.href='http://0.0.0.0:8091/';
-                                    }
-
+                function tz() {
+                    window.location.href = 'http://0.0.0.0:8091/';
+                }
 
 
             </script>
@@ -145,21 +100,20 @@
 
     </div>
 
-    <div class="layui-footer">
-        <!-- 底部固定区域 -->
-        © BUPT
+    <div class="layui-footer" id="footer">
+        <script>
+            $('#footer').load('/footer')
+        </script>
     </div>
 </div>
 <script type="text/javascript" src="../static/layui.js"></script>
 <script>
-//一般直接写在一个js文件中
-layui.use(['layer', 'form','element','laydate'], function(){
-  var layer = layui.layer
-  ,form = layui.form
-  ,element = layui.element;
- });
-
-
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form', 'element', 'laydate'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , element = layui.element;
+    });
 
 
 </script>

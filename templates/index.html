@@ -15,38 +15,17 @@
     <script src="../static/js/bootstrap-table.js"></script>
     <script src="../static/js/bootstrap-table-zh-CN.js"></script>
     <style type="text/css">
-    #table tr:nth-child(even) {
-                background: #fafafa;
-            }
+        #table tr:nth-child(even) {
+            background: #fafafa;
+        }
 
-    #table th {
-                background: #efefef;
-            }
-    #table td{border: 1px solid transparent !important;}
-    .layui-nav-tree .layui-nav-item{
-    font-weight:bold;
-        font-size:50px;
-        line-height:50px;
-    }
+        #table th {
+            background: #efefef;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        #table td {
+            border: 1px solid transparent !important;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
@@ -54,12 +33,12 @@
     <div class="layui-header">
         <div class="layui-logo">中泰证券</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <h3 style="color:#ffffff; text-align:center">实时新闻展示页</h3>
+        <h3 style="color:#ffffff; text-align:center">全部新闻展示页</h3>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="../static/images/featured_post_01.jpg" class="layui-nav-img">
-                    {{user}}
+                    普通用户
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
@@ -70,42 +49,10 @@
         </ul>
     </div>
 
-    <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree " lay-filter="test" lay-shrink="all">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">新闻实时展示</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="/index/{{user}}">全部企业新闻</a></dd>
-                        <dd><a href="/single_company/华信">上海华信</a></dd>
-                        <dd><a href="/single_company/金茂">山东金茂</a></dd>
-                        <dd>
-                            <div class="layui-input-inline">
-
-                                <input style="width:100px;padding:0px 0px 0px 15px; margin:0px 0px 0px 15px;"
-                                       type="text"
-                                       name="title" required lay-verify="required" placeholder="更多"
-                                       autocomplete="off" class="layui-input" id="inputcompany">
-                            </div>
-                            <button type="button" class="layui-btn"
-                                    onclick="location='/single_company/'+document.getElementById(&quot;inputcompany&quot;).value;">
-                                查询
-                            </button>
-                        </dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">图谱操作</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="/企业信息展示">企业展示</a></dd>
-                        <dd><a href="/企业关联信息展示">关联信息展示</a></dd>
-                    </dl>
-                </li>
-
-                <li class="layui-nav-item"><a href="/add">增删改查</a></li>
-            </ul>
-        </div>
+    <div class="layui-side layui-bg-black" id="side">
+        <script>
+            $("#side").load("/side")
+        </script>
     </div>
 
     <div class="layui-body">
@@ -175,261 +122,228 @@
 
     </div>
 
-    <div class="layui-footer">
-        <!-- 底部固定区域 -->
-        © BUPT
+    <div class="layui-footer" id="footer">
+        <script>
+            $('#footer').load('/footer')
+        </script>
     </div>
 </div>
 <script type="text/javascript" src="../static/layui.js"></script>
 <script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form', 'element', 'laydate'], function () {
+        var layer = layui.layer
+            , form = layui.form
+            , element = layui.element;
+        form.render('select', 'myDiv');
+        var laydate = layui.laydate;
+        var nowTime = new Date().valueOf();
+        var max = null;
 
+        var start = laydate.render({
+            elem: '#start_time',
+            type: 'date',
+            max: nowTime,
+            btns: ['clear', 'confirm'],
+            done: function (value, date) {
+                endMax = end.config.max;
+                end.config.min = date;
+                end.config.min.month = date.month - 1;
+            }
+        });
+        var end = laydate.render({
+            elem: '#end_time',
+            type: 'date',
+            max: nowTime,
+            done: function (value, date) {
+                if ($.trim(value) == '') {
+                    var curDate = new Date();
+                    date = {'date': curDate.getDate(), 'month': curDate.getMonth() + 1, 'year': curDate.getFullYear()};
+                }
+                start.config.max = date;
+                start.config.max.month = date.month - 1;
+            }
+        });
 
-</script>
-<script>
-//一般直接写在一个js文件中
-layui.use(['layer', 'form','element','laydate'], function(){
-  var layer = layui.layer
-  ,form = layui.form
-  ,element = layui.element;
-  form.render('select','myDiv');
-  var laydate = layui.laydate;
-var nowTime = new Date().valueOf();
-var max = null;
-
-var start = laydate.render({
-elem: '#start_time',
-type: 'date',
-max: nowTime,
-btns: ['clear', 'confirm'],
-done: function(value, date){
-endMax = end.config.max;
-end.config.min = date;
-end.config.min.month = date.month -1;
-}
-});
-var end = laydate.render({
-elem: '#end_time',
-type: 'date',
-max: nowTime,
-done: function(value, date){
-if($.trim(value) == ''){
-var curDate = new Date();
-date = {'date': curDate.getDate(), 'month': curDate.getMonth()+1, 'year': curDate.getFullYear()};
-}
-start.config.max = date;
-start.config.max.month = date.month -1;
-}
-});
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
 
 
 </script>
 <script>
     $('#table').bootstrapTable({
         url: '/getJsonData/all',
-        queryParams:"queryParams",
-        pagination:"true",
-        method:'get',
-        sidePagination:"true",
-        striped:true,
-        pageSize:"12",
-        pageList : [ '10', '15', '25' ],
+        queryParams: "queryParams",
+        pagination: "true",
+        method: 'get',
+        sidePagination: "true",
+        striped: true,
+        pageSize: "12",
+        pageList: ['10', '15', '25'],
         clickToSelect: true, //是否启用点击选中行
-        queryParams : function (params) {
-            	//console.log(params);
-                var temp = {
-                    startTime : $('#start_time').val(),
-                    endTime : $('#end_time').val(),
-                	relateCompany:$('#inputRelateCompany').val(),
-                	riskType:$('#dangerType').val(),
-                	riskLevel:$('#dangerLevel').val(),
-                };
-                return temp;
-            },
-		paginationPreText: "<<",
-		paginationNextText: ">>",
+        queryParams: function (params) {
+            //console.log(params);
+            var temp = {
+                startTime: $('#start_time').val(),
+                endTime: $('#end_time').val(),
+                relateCompany: $('#inputRelateCompany').val(),
+                riskType: $('#dangerType').val(),
+                riskLevel: $('#dangerLevel').val(),
+            };
+            return temp;
+        },
+        paginationPreText: "<<",
+        paginationNextText: ">>",
         columns: [
-        {
-                    checkbox: true,
-                    hidden:true
-                },
-                {
-                    title: '序号',
-                    align: "center",
-                    width: 40,
-                    formatter: function (value, row, index) {
-                        var table = $('#table');
-                        var pageSize = table.bootstrapTable('getOptions').pageSize;
-                        //获取当前是第几页
-                        var pageNumber = table.bootstrapTable('getOptions').pageNumber;
-                        //返回序号，注意index是从0开始的，所以要加上1
-                        return pageSize * (pageNumber - 1) + index + 1;
-                    }
-                },
-                {
-                field:'newscode',
-                title:'新闻编号',
-                align:'center',
-                visible: false
-                },
-                {
-            field: 'date',
-            title: '日期',
-            align:'center',
-            width:200,
-                               sortable: true,
-
-        }, {
-            field: 'title',
-            title: '标题',
-            cellStyle: formatTableUnit,
-             formatter: paramsMatter,
-            align:'left',
-            width:1000
-
-        },
-        {
-            field: 'Time',
-            title: '发布时间',
-            align:'center',
-            width:200,
-                               sortable: true,
-
-        },
-         {
-            field: 'riskType',
-            title: '风险类型',
-            align:'center',
-                   sortable: true,
-
-        },
-         {
-            field: 'riskLevel',
-            title: '风险等级',
-            align:'center',
-                               sortable: true,
-
-        },
-         {
-            field: 'relateCompany',
-            title: '关联公司',
-            align:'center',
-                               sortable: true,
-
-        },
-{
-    title: '操作',
-    align: 'center',
-    formatter: function() {
-                return '<button id =btn1 class="">详</button>'
+            {
+                checkbox: true,
+                hidden: true
             },
-    events: {
-        "click #btn1": function(e,value,row,index) {
+            {
+                title: '序号',
+                align: "center",
+                width: 40,
+                formatter: function (value, row, index) {
+                    var table = $('#table');
+                    var pageSize = table.bootstrapTable('getOptions').pageSize;
+                    //获取当前是第几页
+                    var pageNumber = table.bootstrapTable('getOptions').pageNumber;
+                    //返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+            },
+            {
+                field: 'newscode',
+                title: '新闻编号',
+                align: 'center',
+                visible: false
+            },
+            {
+                field: 'date',
+                title: '日期',
+                align: 'center',
+                width: 200,
+                sortable: true,
+
+            }, {
+                field: 'title',
+                title: '标题',
+                cellStyle: formatTableUnit,
+                formatter: paramsMatter,
+                align: 'left',
+                width: 1000
+
+            },
+            {
+                field: 'Time',
+                title: '发布时间',
+                align: 'center',
+                width: 200,
+                sortable: true,
+
+            },
+            {
+                field: 'riskType',
+                title: '风险类型',
+                align: 'center',
+                sortable: true,
+
+            },
+            {
+                field: 'riskLevel',
+                title: '风险等级',
+                align: 'center',
+                sortable: true,
+
+            },
+            {
+                field: 'relateCompany',
+                title: '关联公司',
+                align: 'center',
+                sortable: true,
+
+            },
+            {
+                title: '操作',
+                align: 'center',
+                formatter: function () {
+                    return '<button id =btn1 class="">详</button>'
+                },
+                events: {
+                    "click #btn1": function (e, value, row, index) {
                         window.open(
- "http://fcnews.finchina.com/newsview/default.aspx?newscode="+row.newcode,
- "_blank",
- "top=300,left=300,width=800,height=500,menubar=no,toolbar=no,status=no,scrollbars=yes"
-);
-                      }
-             }
+                            "http://fcnews.finchina.com/newsview/default.aspx?newscode=" + row.newcode,
+                            "_blank",
+                            "top=300,left=300,width=800,height=500,menubar=no,toolbar=no,status=no,scrollbars=yes"
+                        );
+                    }
+                }
 
 
- }
+            }
 
         ]
     });
 
 
-
     //表格超出宽度鼠标悬停显示td内容
-            function paramsMatter(value, row, index) {
-                var span = document.createElement("span");
-                span.setAttribute("title", value);
-                span.innerHTML = value;
-                return span.outerHTML;
-            }
-            //td宽度以及内容超过宽度隐藏
-            function formatTableUnit(value, row, index) {
-                return {
-                    css: {
-                        "white-space": "nowrap",
-                        "text-overflow": "ellipsis",
-                        "overflow": "hidden",
-                        "max-width": "60px"
-                    }
-                }
-            }
+    function paramsMatter(value, row, index) {
+        var span = document.createElement("span");
+        span.setAttribute("title", value);
+        span.innerHTML = value;
+        return span.outerHTML;
+    }
 
-	function updateNews() {
-            $.ajax({
-                url: '/updateNewsData',
-                success: function (response) {
-                    var newData = { "date": response['date'], "newscode":response['newscode'],"title": response['title'],
-                    "Time":response['Time'],
-                    "riskType": response['riskType'], "riskLevel": response['riskLevel'], "relateCompany": response['relateCompany'] };
-                    $("#table").bootstrapTable('prepend',  newData);
-                }
-            })
-        };
- setInterval(
-        function(){
+    //td宽度以及内容超过宽度隐藏
+    function formatTableUnit(value, row, index) {
+        return {
+            css: {
+                "white-space": "nowrap",
+                "text-overflow": "ellipsis",
+                "overflow": "hidden",
+                "max-width": "60px"
+            }
+        }
+    }
+
+    function updateNews() {
         $.ajax({
+            url: '/updateNewsData',
+            success: function (response) {
+                var newData = {
+                    "date": response['date'],
+                    "newscode": response['newscode'],
+                    "title": response['title'],
+                    "Time": response['Time'],
+                    "riskType": response['riskType'],
+                    "riskLevel": response['riskLevel'],
+                    "relateCompany": response['relateCompany']
+                };
+                $("#table").bootstrapTable('prepend', newData);
+            }
+        })
+    };
+    setInterval(
+        function () {
+            $.ajax({
                 url: '/ListenDataChange/all',
                 success: function (response) {
-                    if (response['isUpdate']){
-                    $('#table').bootstrapTable('refresh');
+                    if (response['isUpdate']) {
+                        $('#table').bootstrapTable('refresh');
                     }
                 }
             })
 
-            },1000)
+        }, 1000)
+
     //查询筛选按钮
-    function btnSearch(){
-    $('#table').bootstrapTable('refresh');
+    function btnSearch() {
+        $('#table').bootstrapTable('refresh');
         $('#inputRelateCompany').val("");
         $('#start_time').val("");
         $('#end_time').val("");
     };
 
 
-
-
-
-
-
-
 </script>
 </body>
-
 </html>
