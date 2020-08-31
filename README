@@ -1,0 +1,6 @@
+1、Mysql 数据库中创建数据库useraccount
+2、useraccount中创建表users  【userid(递增正整数)，username(用户姓名)，password（密码），desc（账号描述）】四个字段
+3、Mysql数据库root密码sgxsgwbd
+4、宇杰的neo4j数据库在neo4j文件夹中
+5、运行程序前需要将neo4j数据库打开，Mysql数据库打开
+6、app.py为主程序

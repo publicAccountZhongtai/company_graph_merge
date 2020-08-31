@@ -393,7 +393,7 @@ def single_company(company, name="companys"):
     return render_template("company.html", name=name, company=company)
 
 
-# 用户信息存储mysql数据库
+    # 用户信息存储mysql数据库
 connect = pymysql.Connect(
     host='localhost',
     port=3306,
