@@ -83,7 +83,7 @@ def index2():
 def add():
     if request.method == 'POST':
 
-        graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
+        # graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
 
         user_input1 = request.form.get("company")
         user_input2 = request.form.get("position")
@@ -117,7 +117,7 @@ def search():
     # 完善一下的话，html的地方写个循环
     if request.method == 'POST':
         information = request.form.get("information")
-        graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
+        # graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
 
         matcher = NodeMatcher(graph)
         nodelist = list(matcher.match())
@@ -140,11 +140,8 @@ def search():
 @app.route('/delete', methods=['POST', 'GET'])
 def delete():
     if request.method == 'POST':
-
-        graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
-
+        # graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
         user_delete = request.form.get("delete_name")  # 需要删除的单节点的反馈节点
-
         user_delnode = name.match(graph, user_delete).first()
 
         if len(user_delete) > 0:
@@ -156,7 +153,7 @@ def delete():
 @app.route('/change', methods=['POST', 'GET'])
 def change():
     if request.method == 'POST':
-        graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
+        # graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
 
         user_change1 = request.form.get("change_company")
         user_change2 = request.form.get("change_position")
@@ -392,8 +389,9 @@ def login(name="login"):
 def single_company(company, name="companys"):
     return render_template("company.html", name=name, company=company)
 
-
     # 用户信息存储mysql数据库
+
+
 connect = pymysql.Connect(
     host='localhost',
     port=3306,
