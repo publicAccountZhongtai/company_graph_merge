@@ -93,8 +93,8 @@ def add():
 
         if len(user_input1) > 0:
             matcher = NodeMatcher(graph)
-            node2 = matcher.match("Position", name=user_input2, company=user_input1).first()
-            node3 = Node("name", name=user_input3)
+            node2 = matcher.match("公司属性", name=user_input2, company=user_input1).first()
+            node3 = Node("属性内容", name=user_input3)
             relationship1 = Relationship(node3, "属于", node2)
 
             total_add1 = node3 | relationship1
@@ -102,8 +102,8 @@ def add():
 
         elif len(user_input4) > 0:
             matcher = NodeMatcher(graph)
-            node4 = matcher.match("Company", name=user_input4).first()
-            node5 = Node("Position", name=user_input5, company=user_input4)
+            node4 = matcher.match("主体名称", name=user_input4).first()
+            node5 = Node("公司属性", name=user_input5, company=user_input4)
             relationship2 = Relationship(node5, "属于", node4)
             total_add2 = node5 | relationship2
             graph.create(total_add2)
@@ -161,14 +161,14 @@ def change():
         user_change4 = request.form.get("new_name")
 
         matcher = NodeMatcher(graph)
-        company_node = matcher.match("Company", name=user_change1).first()
+        company_node = matcher.match("主体名称", name=user_change1).first()
 
-        position_node = matcher.match("Position", name=user_change2, company=user_change1).first()
-        name_node = matcher.match("name", name=user_change3).first()
+        position_node = matcher.match("公司属性", name=user_change2, company=user_change1).first()
+        name_node = matcher.match("属性内容", name=user_change3).first()
 
         graph.delete(name_node)
 
-        new_node = Node("name", name=user_change4)
+        new_node = Node("属性内容", name=user_change4)
 
         new_rel = Relationship(new_node, "属于", position_node)
 
