@@ -94,7 +94,7 @@ def add():
         if len(user_input1) > 0:
             matcher = NodeMatcher(graph)
             node2 = matcher.match("公司属性", name=user_input2, company=user_input1).first()
-            node3 = Node("属性内容", name=user_input3)
+            node3 = Node("属性内容", name=user_input3, company=user_input1)
             relationship1 = Relationship(node3, "属于", node2)
 
             total_add1 = node3 | relationship1
@@ -102,7 +102,7 @@ def add():
 
         elif len(user_input4) > 0:
             matcher = NodeMatcher(graph)
-            node4 = matcher.match("主体名称", name=user_input4).first()
+            node4 = matcher.match("公司主体", name=user_input4).first()
             node5 = Node("公司属性", name=user_input5, company=user_input4)
             relationship2 = Relationship(node5, "属于", node4)
             total_add2 = node5 | relationship2
@@ -142,7 +142,8 @@ def delete():
     if request.method == 'POST':
         # graph = Graph('http://localhost:7474', username='sgw', password='kk50591388')
         user_delete = request.form.get("delete_name")  # 需要删除的单节点的反馈节点
-        user_delnode = name.match(graph, user_delete).first()
+        user_delcom = request.form.get("delete_company")
+        user_delnode = name.match(graph, name=user_delete,company=user_delcom).first()
 
         if len(user_delete) > 0:
             graph.delete(user_delnode)
@@ -161,10 +162,10 @@ def change():
         user_change4 = request.form.get("new_name")
 
         matcher = NodeMatcher(graph)
-        company_node = matcher.match("主体名称", name=user_change1).first()
 
-        position_node = matcher.match("公司属性", name=user_change2, company=user_change1).first()
-        name_node = matcher.match("属性内容", name=user_change3).first()
+        company_node = matcher.match("公司主体", name=user_change1).first()
+        position_node = matcher.match("公司属性", name=user_change2).first()
+        name_node = matcher.match("属性内容", name=user_change3, company=user_change1).first()
 
         graph.delete(name_node)
 
