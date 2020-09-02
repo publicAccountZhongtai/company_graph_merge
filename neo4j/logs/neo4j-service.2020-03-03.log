@@ -1,0 +1,17 @@
+[2020-03-03 11:55:11] [info]  [19672] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-03-03 11:55:11] [info]  [19672] Stopping service 'neo4j'...
+[2020-03-03 11:55:25] [info]  [19672] Service 'neo4j' stopped.
+[2020-03-03 11:55:26] [info]  [19672] Stop service finished.
+[2020-03-03 11:55:26] [info]  [19672] Apache Commons Daemon procrun finished.
+[2020-03-03 17:12:13] [info]  [13044] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-03-03 17:12:14] [info]  [13044] Starting service 'neo4j'...
+[2020-03-03 17:12:14] [info]  [16276] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-03-03 17:12:14] [info]  [16276] Running Service 'neo4j'...
+[2020-03-03 17:12:14] [info]  [17356] Starting service...
+[2020-03-03 17:12:17] [info]  [17356] Service started in 3376 milliseconds.
+[2020-03-03 17:12:19] [info]  [13044] Started service 'neo4j'.
+[2020-03-03 17:12:19] [info]  [13044] Finished starting service 'neo4j', returning 1.
+[2020-03-03 17:12:19] [info]  [13044] Apache Commons Daemon procrun finished.
+[2020-03-05 20:25:33] [info]  [23508] Console SHUTDOWN event signaled.
+[2020-03-05 20:25:33] [info]  [23508] Stopping service...
+[2020-03-05 20:25:39] [info]  [23508] Service stop thread completed.

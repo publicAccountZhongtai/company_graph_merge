@@ -1,0 +1,15 @@
+[2020-02-06 21:31:48] [info]  [ 3120] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-02-06 21:31:49] [info]  [ 3120] Installing service 'neo4j' name 'Neo4j Graph Database - neo4j'.
+[2020-02-06 21:31:49] [info]  [ 3120] Service 'neo4j' installed.
+[2020-02-06 21:31:49] [info]  [ 3120] Apache Commons Daemon procrun finished.
+[2020-02-06 21:32:14] [info]  [11064] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-02-06 21:32:14] [info]  [11064] Starting service 'neo4j'...
+[2020-02-06 21:32:14] [info]  [ 4408] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-02-06 21:32:14] [info]  [ 4408] Running Service 'neo4j'...
+[2020-02-06 21:32:14] [info]  [ 2132] Starting service...
+[2020-02-06 21:32:15] [info]  [ 2132] Service started in 1260 milliseconds.
+[2020-02-06 21:32:17] [info]  [11064] Started service 'neo4j'.
+[2020-02-06 21:32:17] [info]  [11064] Finished starting service 'neo4j', returning 1.
+[2020-02-06 21:32:18] [info]  [11064] Apache Commons Daemon procrun finished.
+[2020-02-07 10:57:45] [info]  [17404] Console SHUTDOWN event signaled.
+[2020-02-07 10:57:45] [info]  [17404] Stopping service...

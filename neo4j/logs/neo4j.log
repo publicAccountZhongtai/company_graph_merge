@@ -1,0 +1,14 @@
+
+2020-07-04 08:32:18 Apache Commons Daemon procrun stdout initialized.
+2020-07-04 00:32:19.405+0000 WARN  Use of deprecated setting port propagation. port 7687 is migrated from dbms.connector.bolt.listen_address to dbms.connector.bolt.advertised_address.
+2020-07-04 00:32:19.405+0000 WARN  Use of deprecated setting port propagation. port 7474 is migrated from dbms.connector.http.listen_address to dbms.connector.http.advertised_address.
+2020-07-04 00:32:19.405+0000 WARN  Use of deprecated setting port propagation. port 7473 is migrated from dbms.connector.https.listen_address to dbms.connector.https.advertised_address.
+2020-07-04 00:32:19.405+0000 WARN  Use of deprecated setting dbms.connectors.default_listen_address. It is replaced by dbms.default_listen_address
+2020-07-04 00:32:19.405+0000 INFO  ======== Neo4j 4.0.0 ========
+2020-07-04 00:32:19.421+0000 INFO  Starting...
+2020-07-04 00:32:28.144+0000 INFO  Called db.clearQueryCaches(): Query cache already empty.
+2020-07-04 00:32:28.269+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2020-07-04 00:32:28.269+0000 INFO  Started.
+2020-07-04 00:32:28.910+0000 INFO  Remote interface available at http://localhost:7474/
+2020-07-04 06:12:42.862+0000 INFO  Stopping...
+2020-07-04 06:12:47.902+0000 INFO  Stopped.

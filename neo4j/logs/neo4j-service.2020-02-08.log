@@ -1,0 +1,5 @@
+[2020-02-08 10:15:38] [info]  [16572] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-02-08 10:15:38] [info]  [16572] Stopping service 'neo4j'...
+[2020-02-08 10:15:50] [info]  [16572] Service 'neo4j' stopped.
+[2020-02-08 10:15:51] [info]  [16572] Stop service finished.
+[2020-02-08 10:15:51] [info]  [16572] Apache Commons Daemon procrun finished.

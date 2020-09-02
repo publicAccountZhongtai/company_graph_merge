@@ -1,0 +1,14 @@
+[2020-04-27 21:51:43] [info]  [ 5620] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-04-27 21:51:43] [info]  [ 5620] Installing service 'neo4j' name 'Neo4j Graph Database - neo4j'.
+[2020-04-27 21:51:43] [info]  [ 5620] Service 'neo4j' installed.
+[2020-04-27 21:51:43] [info]  [ 5620] Apache Commons Daemon procrun finished.
+[2020-04-27 21:52:21] [info]  [ 6924] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-04-27 21:52:21] [info]  [ 6924] Starting service 'neo4j'...
+[2020-04-27 21:52:21] [info]  [ 7892] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-04-27 21:52:22] [info]  [ 7892] Running Service 'neo4j'...
+[2020-04-27 21:52:22] [info]  [ 1992] Starting service...
+[2020-04-27 21:52:25] [info]  [ 1992] Service started in 3168 milliseconds.
+[2020-04-27 21:52:27] [info]  [ 6924] Started service 'neo4j'.
+[2020-04-27 21:52:27] [info]  [ 6924] Finished starting service 'neo4j', returning 1.
+[2020-04-27 21:52:27] [info]  [ 6924] Apache Commons Daemon procrun finished.
+[2020-04-28 11:37:09] [info]  [ 9780] Stopping service...

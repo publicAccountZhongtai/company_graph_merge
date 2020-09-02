@@ -1,0 +1,5 @@
+[2020-04-28 11:37:09] [info]  [10176] Apache Commons Daemon procrun (1.2.0.0 64-bit) started.
+[2020-04-28 11:37:09] [info]  [10176] Stopping service 'neo4j'...
+[2020-04-28 11:37:21] [info]  [10176] Service 'neo4j' stopped.
+[2020-04-28 11:37:21] [info]  [10176] Stop service finished.
+[2020-04-28 11:37:21] [info]  [10176] Apache Commons Daemon procrun finished.
