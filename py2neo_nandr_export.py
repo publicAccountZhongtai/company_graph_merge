@@ -51,7 +51,7 @@ def buildEdges(relationRecord):
     return data
 
 def writefile2(company):
-    x = 'match (na:主体名称)-[re1]-(nb) where na.name=' + "'" + company + "'"
+    x = 'match (na:公司主体)-[re1]-(nb) where na.name=' + "'" + company + "'"
     y = graph.run(x +
               "with na,re1,nb match (nb)-[re2]-(nc) "
               "with apoc.coll.union(collect(na),collect(nb)) as one,collect(nc) as two "

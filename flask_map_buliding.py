@@ -26,7 +26,7 @@ def do_upload():
             elements = readexcel(file_name)
             nodes = CreateNode(elements)
             CreateRelationship(elements, nodes)
-            graph.run("match (n) where any(label in labels(n) WHERE label <> '概念') "
+            graph.run("match (n) where any(label in labels(n) WHERE label <> '公司属性') "
                         "WITH n.name as name, COLLECT(n) as nodelist, COUNT(*) as count "
                         "WHERE count > 1 "
                         "CALL apoc.refactor.mergeNodes(nodelist) YIELD node "

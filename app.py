@@ -62,7 +62,7 @@ class Position(GraphObject):
 writefile1()
 
 companys = []
-for item in graph.run('MATCH (n:主体名称) RETURN n').data():
+for item in graph.run('MATCH (n:公司主体) RETURN n').data():
     company = item.get('n').get('name')
     writefile2(company)
     companys.append(company)
